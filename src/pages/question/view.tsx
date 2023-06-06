@@ -46,9 +46,14 @@ export default function ViewQuestions() {
     }
   }
 
-  async function deleteNature(id: string) {
+  async function deleteQuestion(index: number) {
     try {
-      await firebase.firestore().collection("questions").doc(id).delete().finally(() => console.log("foi deletado"))
+      const questionCollection = firebase.firestore().collection("questions").doc(router.query.id as string)
+      await questionCollection.update({
+        questions: firebase.firestore.FieldValue.arrayRemove(
+          await questionCollection.get().then((doc) => doc.data().questions[index])
+        )
+      })
     } catch (error) {
       console.log(error.message)
     }
@@ -136,7 +141,7 @@ export default function ViewQuestions() {
                                     fontSize="sm"
                                     colorScheme="red"
                                     cursor="pointer"
-                                    onClick={() => deleteNature(q.id)}
+                                    onClick={() => deleteQuestion(index_question)}
                                   >
                                     <Icon as={RiDeleteBinLine} fontSize="16" />
                                   </Button>
