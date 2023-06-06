@@ -35,7 +35,7 @@ export default function ViewQuestions() {
         if (query.exists) {
           const data = query.data() as Question[]
           // console.log(data)
-          setQuestions([data])
+          setQuestions([data] as any)
         }
 
         setIsLoading(false)
