@@ -47,11 +47,11 @@ export default function createUser() {
           as="form"
           flex="1"
           borderRadius={8}
-          bg="gray.800"
+          bg="white"
           p={["6", "8"]}
           onSubmit={handleSubmit(handleCreateUser)}
         >
-          <Heading size="lg" fontWeight="normal">Criar usuário</Heading>
+          <Heading size="lg" fontWeight="normal" color="gray.500">Criar usuário</Heading>
 
           <Divider my="6" borderColor="gray.700" />
 
@@ -73,8 +73,8 @@ export default function createUser() {
 
             <SimpleGrid minChildWidth="240px" spacing={["6", "8"]} w="100%">
               <Box>
-                <Text fontWeight="bold" mb={2}>Função</Text>
-                <Select bg="gray.900" placeholder='' size={"lg"} border="none">
+                <Text fontWeight="bold" mb={2} color="gray.500">Função</Text>
+                <Select bg="white" color="gray.500" placeholder='Selecione uma função' size={"lg"} borderColor="blue.200" borderWidth={1}>
                   <option style={{ color: "gray" }} value='aluno'>Aluno</option>
                   <option style={{ color: "gray" }} value='professor'>Professor</option>
                 </Select>
@@ -91,7 +91,7 @@ export default function createUser() {
           <Flex mt="8" justify="flex-end">
             <HStack spacing="4">
               <Link href="/users" passHref>
-                <Button as="a" colorScheme="whiteAlpha">Cancelar</Button>
+                <Button as="a" colorScheme="red">Cancelar</Button>
               </Link>
               <Button
                 type="submit"

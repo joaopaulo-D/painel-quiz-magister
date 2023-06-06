@@ -49,9 +49,9 @@ export default function UserList({ users }) {
       <Flex w="100%" my="6" maxWidth={1480} mx="auto" px="6">
         <Sidebar />
 
-        <Box flex="1" borderRadius={8} bg="gray.800" p="8">
+        <Box flex="1" borderRadius={8} bg="white" p="8">
           <Flex mb="8" justify="space-between" align="center">
-            <Heading size="lg" fontWeight="normal">
+            <Heading color="gray.500" size="lg" fontWeight="normal">
               Usuários
 
               {/* { !isLoading && isFetching && <Spinner size="sm" color="gray.500" ml="4"/> } */}
@@ -72,32 +72,32 @@ export default function UserList({ users }) {
 
           {isLoading ? (
             <Flex justify="center">
-              <Spinner />
+              <Spinner color="blue.200"/>
             </Flex>
           ) : error ? (
             <Flex justify="center">
-              <Text>Falha em obter dados dos usuários</Text>
+              <Text color="gray.500">Falha em obter dados dos usuários</Text>
             </Flex>
           ) : (
             <>
               <Table colorScheme="whiteAlpha">
-                <Thead>
+                <Thead bg="blue.200">
                   <Tr>
-                    <Th px={["4", "4", "6"]} color="gray.300" width="8">
-                      <Checkbox colorScheme="blue" />
+                    <Th px={["4", "4", "6"]} color="white" width="8">
+                      <Checkbox colorScheme="white" />
                     </Th>
-                    <Th>Usuários</Th>
-                    <Th>Função</Th>
-                    {isWideVersion && <Th>Data de cadastro</Th>}
-                    <Th width="8">Ações</Th>
+                    <Th color="white">Usuários</Th>
+                    <Th color="white">Função</Th>
+                    {isWideVersion && <Th color="white">Data de cadastro</Th>}
+                    <Th width="8" color="white">Ações</Th>
                   </Tr>
                 </Thead>
 
-                <Tbody>
+                <Tbody bg="white.300">
 
                   {data.map((user, index) => {
                     return (
-                      <Tr key={user.id}>
+                      <Tr key={user.id} borderBottomColor="gray.500" borderBottomWidth={2}>
                         <Td px={["4", "4", "6"]}>
                           <Checkbox
                             colorScheme="blue"
@@ -109,15 +109,15 @@ export default function UserList({ users }) {
                         <Td>
                           <Box>
                             <Link color="white" onMouseEnter={() => console.log("")}>
-                              <Text fontWeight="bold">{user.name}</Text>
+                              <Text fontWeight="bold" color="gray.500">{user.name}</Text>
                             </Link>
                             <Text fontSize="sm" color="gray.300">{user.email}</Text>
                           </Box>
                         </Td>
                         <Td>
-                          <Badge colorScheme="orange">{user.funcao}</Badge>
+                          <Badge colorScheme="yellow">{user.funcao}</Badge>
                         </Td>
-                        {isWideVersion && <Td>{user.createdAt}</Td>}
+                        {isWideVersion && <Td color="gray.500" fontWeight="bold">{user.createdAt}</Td>}
                         <Td>
                           <HStack>
                             <Box>
