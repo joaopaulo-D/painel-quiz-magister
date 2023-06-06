@@ -34,7 +34,7 @@ export default function ViewQuestions() {
       firebase.firestore().collection("questions").doc(router.query.id as string).onSnapshot((query) => {
         if (query.exists) {
           const data = query.data() as Question[]
-          console.log(data)
+          // console.log(data)
           setQuestions([data])
         }
 
