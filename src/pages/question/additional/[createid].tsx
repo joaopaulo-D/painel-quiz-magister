@@ -133,6 +133,7 @@ export default function createAdditionalQuestion() {
                   <option style={{ color: "gray" }} value='2'>Alternativa 2</option>
                   <option style={{ color: "gray" }} value='3'>Alternativa 3</option>
                   <option style={{ color: "gray" }} value='4'>Alternativa 4</option>
+                  <option style={{ color: "gray" }} value='4'>Alternativa 5</option>
                 </Select>
               </Box>
             </SimpleGrid>
