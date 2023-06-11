@@ -20,6 +20,7 @@ type CreateAdditionalQuestionFormData = {
   alternative2: string;
   alternative3: string;
   alternative4: string;
+  alternative5: string;
 }
 
 const createAdditionalQuestionFormSchema = yup.object().shape({
@@ -28,6 +29,7 @@ const createAdditionalQuestionFormSchema = yup.object().shape({
   alternative2: yup.string().required('Alternativa é obrigatória'),
   alternative3: yup.string().required('Alternativa é obrigatória'),
   alternative4: yup.string().required('Alternativa é obrigatória'),
+  alternative5: yup.string().required('Alternativa é obrigatória'),
 })
 
 export default function createAdditionalQuestion() {
@@ -47,7 +49,7 @@ export default function createAdditionalQuestion() {
       await firebase.firestore().collection("questions").doc(router.query.createid as string).update({
         questions: firebase.firestore.FieldValue.arrayUnion(...[{
           title: values.questao,
-          alternatives: [values.alternative1, values.alternative2, values.alternative3, values.alternative4],
+          alternatives: [values.alternative1, values.alternative2, values.alternative3, values.alternative4, values.alternative5],
           correct: alternativeCorrect
         }])
       })
@@ -112,6 +114,14 @@ export default function createAdditionalQuestion() {
                 label="Alternativa 4"
                 error={errors.alternative}
                 {...register('alternative4')}
+              />
+            </SimpleGrid>
+            <SimpleGrid minChildWidth="240px" spacing={["6", "8"]} w="100%">
+              <Input
+                name="alternative5"
+                label="Alternativa 5"
+                error={errors.alternative5}
+                {...register('alternative5')}
               />
             </SimpleGrid>
 

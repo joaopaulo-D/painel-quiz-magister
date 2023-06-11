@@ -87,7 +87,7 @@ export default function Recover() {
 
         <Stack spacing={4}>
           <Text fontSize={15} color="gray.200" textAlign="justify">
-            Digite seu email, em seguida clique no botão enviar. Uma link de redefinição da sua senha será enviado para o email cadastrado.
+            Digite seu email, em seguida clique no botão enviar. Um link de redefinição da sua senha será enviado para o email cadastrado.
           </Text>
           <InputGroup size="lg">
             <InputLeftElement children={<Icon as={MdOutlineEmail} color="gray.300" fontSize={20} />} />

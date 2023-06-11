@@ -27,16 +27,18 @@ export default function UserList({ users }) {
   const getDataUserAuthenticated = async () => {
     try {  
       setIsLoading(true)
-      const response = await firebase.firestore().collection("users").doc(firebase.auth().currentUser?.uid).get()
-      const data = response.data()
-
-      setData([{
-        id: data.id,
-        name: data.name,
-        email: data.email,
-        teacher: data.teacher,
-        created_at: data.created_at
-      }])
+      const response = await firebase.firestore().collection("users").onSnapshot((doc) => {
+        doc.docs.forEach((doc) => {
+          const data = doc.data()
+          setData([{
+            id: data.id,
+            name: data.name,
+            email: data.email,
+            teacher: data.teacher,
+            created_at: data.created_at
+          }])
+        })
+      })
       setIsLoading(false)
     } catch (error) {
       console.log(error)
