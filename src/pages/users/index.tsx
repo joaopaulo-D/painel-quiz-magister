@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NextLink from "next/link";
 import { Box, Button, Checkbox, Flex, Heading, Icon, Spinner, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue, Link, Badge, HStack } from "@chakra-ui/react";
 import { RiAddLine, RiPencilLine, RiDeleteBinLine } from "react-icons/ri";
@@ -6,7 +6,10 @@ import { RiAddLine, RiPencilLine, RiDeleteBinLine } from "react-icons/ri";
 import { Header } from "../../components/Header";
 import { Pagination } from "../../components/Pagination";
 import { Sidebar } from "../../components/Sidebar";
-import { GetServerSideProps } from "next";
+
+import { firebase } from "../../firebase/firebase";
+import { User } from "../../dtos/User";
+import { convertTimeStampToString } from "../../utils/date";
 
 export default function UserList({ users }) {
   const [page, setPage] = useState(1);
@@ -17,30 +20,37 @@ export default function UserList({ users }) {
   })
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [error, serError] = useState("")
+  const [error, setError] = useState("")
 
-  const [data, setData] = useState([
-    {
-      id: 1,
-      name: "Fernando Silva",
-      email: "tugrp@example.com",
-      funcao: "Professor",
-      createdAt: "21/05/2002",
-      checked: false
-    },
-    {
-      id: 2,
-      name: "Maria Luiza",
-      email: "maria@example.com",
-      funcao: "Aluna",
-      createdAt: "21/05/2006",
-      checked: false
+  const [data, setData] = useState<User[]>([])
+
+  const getDataUserAuthenticated = async () => {
+    try {  
+      setIsLoading(true)
+      const response = await firebase.firestore().collection("users").doc(firebase.auth().currentUser?.uid).get()
+      const data = response.data()
+
+      setData([{
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        teacher: data.teacher,
+        created_at: data.created_at
+      }])
+      setIsLoading(false)
+    } catch (error) {
+      console.log(error)
+      setError(error)
     }
-  ])
-
-  function updateCheckStatus(index: number) {
-    setData(data.map((user, currentIndex) => currentIndex === index ? { ...user, checked: !user.checked } : user))
   }
+
+  // function updateCheckStatus(index: number) {
+  //   setData(data.map((user, currentIndex) => currentIndex === index ? { ...user, checked: !user.checked } : user))
+  // }
+
+  useEffect(() => {
+    getDataUserAuthenticated();
+  }, [])
 
   return (
     <Box>
@@ -52,12 +62,12 @@ export default function UserList({ users }) {
         <Box flex="1" borderRadius={8} bg="white" p="8">
           <Flex mb="8" justify="space-between" align="center">
             <Heading color="gray.500" size="lg" fontWeight="normal">
-              Usuários
+              Alunos e Professores
 
               {/* { !isLoading && isFetching && <Spinner size="sm" color="gray.500" ml="4"/> } */}
             </Heading>
 
-            <NextLink href="/users/create" passHref>
+            {/* <NextLink href="/users/create" passHref>
               <Button
                 as="a"
                 size="sm"
@@ -67,7 +77,7 @@ export default function UserList({ users }) {
               >
                 Criar Usuário
               </Button>
-            </NextLink>
+            </NextLink> */}
           </Flex>
 
           {isLoading ? (
@@ -83,13 +93,13 @@ export default function UserList({ users }) {
               <Table colorScheme="whiteAlpha">
                 <Thead bg="blue.200">
                   <Tr>
-                    <Th px={["4", "4", "6"]} color="white" width="8">
+                    {/* <Th px={["4", "4", "6"]} color="white" width="8">
                       <Checkbox colorScheme="white" />
-                    </Th>
-                    <Th color="white">Usuários</Th>
+                    </Th> */}
+                    <Th color="white">Nome</Th>
                     <Th color="white">Função</Th>
                     {isWideVersion && <Th color="white">Data de cadastro</Th>}
-                    <Th width="8" color="white">Ações</Th>
+                    {/* <Th width="8" color="white">Ações</Th> */}
                   </Tr>
                 </Thead>
 
@@ -97,28 +107,28 @@ export default function UserList({ users }) {
 
                   {data.map((user, index) => {
                     return (
-                      <Tr key={user.id} borderBottomColor="gray.500" borderBottomWidth={2}>
-                        <Td px={["4", "4", "6"]}>
+                      <Tr key={user.id} borderBottomColor="gray.400" borderBottomWidth={2}>
+                        {/* <Td px={["4", "4", "6"]}>
                           <Checkbox
                             colorScheme="blue"
                             key={user.id}
                             checked={user.checked}
                             onChange={() => updateCheckStatus(index)}
                           />
-                        </Td>
+                        </Td> */}
                         <Td>
                           <Box>
                             <Link color="white" onMouseEnter={() => console.log("")}>
-                              <Text fontWeight="bold" color="gray.500">{user.name}</Text>
+                              <Text fontWeight="bold" color="gray.500">{user.teacher ? `Professor: ${user.name}` : `Aluno: ${user.name}`}</Text>
                             </Link>
-                            <Text fontSize="sm" color="gray.300">{user.email}</Text>
+                            <Text fontSize="sm" color="gray.300">Email: {user.email}</Text>
                           </Box>
                         </Td>
                         <Td>
-                          <Badge colorScheme="yellow">{user.funcao}</Badge>
+                          <Badge colorScheme="orange">{user.teacher ? "Professor" : "Aluno"}</Badge>
                         </Td>
-                        {isWideVersion && <Td color="gray.500" fontWeight="bold">{user.createdAt}</Td>}
-                        <Td>
+                        {isWideVersion && <Td color="gray.500" fontWeight="bold">{convertTimeStampToString(user.created_at)}</Td>}
+                        {/* <Td>
                           <HStack>
                             <Box>
                               <Button
@@ -147,7 +157,7 @@ export default function UserList({ users }) {
                               </Box>
                             ) : null}
                           </HStack>
-                        </Td>
+                        </Td> */}
                       </Tr>
                     )
                   })}

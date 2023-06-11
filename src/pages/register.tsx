@@ -10,26 +10,26 @@ import logo from "../../public/assets/logo.png";
 import logoSap from "../../public/assets/logoSap.jpg";
 
 import { MdOutlineEmail } from "react-icons/md";
-import { BiLockAlt } from "react-icons/bi";
+import { BiLockAlt, BiUser } from "react-icons/bi";
 import Link from 'next/link'
 
 import { AuthContext } from '../contexts/FirebaseAuthenticationContext'
 import { useContext } from 'react'
 
-type SignInFormData = {
+type SignUpFormData = {
+  displayName: string;
   email: string;
   password: string;
 }
 
 const signInFormSchema = yup.object().shape({
+  displayName: yup.string().required('Nome é obrigatório'),
   email: yup.string().required('E-mail obrigatório').email('E-mail inválido'),
   password: yup.string().required('Senha obrigatória'),
 })
 
-export default function SignIn() {
-  const { loginWithEmailPassword } = useContext(AuthContext);
-  const toast = useToast();
-  const router = useRouter()
+export default function SignUp() {
+  const { signupWithEmailPassword } = useContext(AuthContext);
 
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(signInFormSchema)
@@ -38,10 +38,10 @@ export default function SignIn() {
   const { errors } = formState;
 
 
-  const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
+  const handleSignIn: SubmitHandler<SignUpFormData> = async (values) => {
     await new Promise(resolve => setTimeout(resolve, 2000))
 
-    loginWithEmailPassword(values.email, values.password);
+    signupWithEmailPassword(values.displayName, values.email, values.password);
   }
 
   return (
@@ -83,6 +83,20 @@ export default function SignIn() {
 
         <Stack spacing={4}>
           <InputGroup size="lg">
+            <InputLeftElement children={<Icon as={BiUser} color="gray.300" fontSize={20} />} />
+            <Input
+              name="displayName"
+              color="gray.300"
+              _placeholder={{
+                fontSize: 15,
+                color: "gray.300"
+              }}
+              placeholder='Nome'
+              {...register("displayName")}
+            />
+          </InputGroup>
+
+          <InputGroup size="lg">
             <InputLeftElement children={<Icon as={MdOutlineEmail} color="gray.300" fontSize={20} />} />
             <Input
               name="email"
@@ -120,15 +134,12 @@ export default function SignIn() {
           size="lg"
           isLoading={formState.isSubmitting}
         >
-          Entrar
+          Cadastrar
         </Button>
 
-        <Center justifyContent="space-between" flexDir="row" mt={10}>
-          <Link href="/register">
-            <Text color="blue.200">Cadastrar</Text>
-          </Link>
-          <Link href="/recover">
-            <Text color="blue.200">Esqueceu a senha?</Text>
+        <Center flexDir="row" mt={10}>
+          <Link href="/">
+            <Text color="blue.200">Já tenho conta</Text>
           </Link>
         </Center>
       </Flex>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 
-import { Box, Button, Checkbox, Flex, Heading, Icon, Spinner, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue, Link, Badge, HStack } from "@chakra-ui/react";
+import { Box, Button, Checkbox, Flex, Heading, Icon, Spinner, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue, Link, Badge, HStack, Stack } from "@chakra-ui/react";
 import { RiAddLine, RiPencilLine, RiDeleteBinLine } from "react-icons/ri";
 
 import { Header } from "../../components/Header";
@@ -27,7 +27,15 @@ export default function DisciplineList() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState("")
 
-  const [discipline, setDiscipline] = useState<Discipline[]>([])
+  const [discipline, setDiscipline] = useState<Discipline[]>([]);
+
+  const [itemPages, setItemPages] = useState(4)
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const pages = Math.ceil(discipline.length / itemPages);
+  const startIdex = currentPage * itemPages;
+  const endIdex = startIdex + itemPages;
+  const currentItens = discipline.slice(startIdex, endIdex);
 
   async function getAllDiscipline(){
     try {
@@ -130,9 +138,9 @@ export default function DisciplineList() {
 
                 <Tbody bg="white.300">
 
-                  {discipline.map((disc, index) => {
+                  {currentItens.map((disc, index) => {
                     return (
-                      <Tr borderBottomColor="gray.200" borderBottomWidth={2} w="full" key={disc.id}>
+                      <Tr borderBottomColor="gray.400" borderBottomWidth={2} w="full" key={disc.id}>
                         <Td px={["4", "4", "8"]}>
                           <Checkbox
                             colorScheme="blue"
@@ -191,11 +199,36 @@ export default function DisciplineList() {
                 </Tbody>
               </Table>
 
-              <Pagination
-                totalCountOfRegisters={10}
-                currentPage={page}
-                onPageChange={setPage}
-              />
+              <Stack
+                spacing="6"
+                direction={["column", "row"]}
+                mt="8"
+                justify="space-between"
+                align="center"
+              >
+                <HStack>
+                  <Text color="gray.500">0 - </Text><Text color="gray.500">10 de</Text><Text color="gray.500">100</Text>
+                </HStack>
+
+                <Stack direction="row" spacing="2">
+
+                  {Array.from(Array(pages), (item, index) => {
+                    return (
+                      <Button
+                        size="sm"
+                        value={index}
+                        fontSize="xs"
+                        width="4"
+                        bgColor="blue.200"
+                        onClick={(e) => setCurrentPage(Number(e.currentTarget.value))}
+                      >
+                        <Text color="white">{index + 1}</Text>
+                      </Button>
+                    )
+                  })}
+
+                </Stack>
+              </Stack>
             </>
           )}
 

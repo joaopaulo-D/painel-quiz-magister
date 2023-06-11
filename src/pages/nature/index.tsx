@@ -129,7 +129,7 @@ export default function NatureList() {
 
                   {nature.map((n, index) => {
                     return (
-                      <Tr borderBottomColor="gray.200" borderBottomWidth={2} w="full" key={n.id}>
+                      <Tr borderBottomColor="gray.400" borderBottomWidth={2} w="full" key={n.id}>
                         <Td px={["4", "4", "8"]}>
                           <Checkbox
                             colorScheme="blue"

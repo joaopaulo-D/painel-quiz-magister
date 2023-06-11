@@ -21,6 +21,8 @@ import {
   Badge,
   Link,
   Stack,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 
 import { Header } from "../../components/Header";
@@ -176,7 +178,7 @@ export default function QuestionList() {
                   colorScheme="green"
                   leftIcon={<Icon as={RiAddLine} fontSize="20" />}
                 >
-                  Criar Questão
+                  Criar Questão inicial
                 </Button>
               </NextLink>
               <Box bg="white" >
@@ -190,9 +192,16 @@ export default function QuestionList() {
 
           </Flex>
 
+          {/* <Flex mb={10}>
+            <Alert status='info' bg="gray.100">
+              <AlertIcon />
+              <Text color="gray.500">Você so utilizara o botão de cadastro de questão inicial somente quando </Text>
+            </Alert>
+          </Flex> */}
+
           {isLoading ? (
             <Flex justify="center">
-              <Spinner color="blue.200"/>
+              <Spinner color="blue.200" />
             </Flex>
           ) : error ? (
             <Flex justify="center">
@@ -209,16 +218,16 @@ export default function QuestionList() {
                     <Th color="white">Disciplina</Th>
                     <Th color="white">Natureza</Th>
                     {/* <Th>Questão</Th> */}
-                    {isWideVersion && <Th color="white">Questões</Th>}
+                    {isWideVersion && <Th color="white">Questões cadastrada</Th>}
                     <Th width="8" color="white">Ações</Th>
                   </Tr>
                 </Thead>
 
                 <Tbody bg="white.300">
 
-                  {questions.map((q, index) => {
+                  {currentItens.map((q, index) => {
                     return (
-                      <Tr key={q.id} borderBottomColor="gray.200" borderBottomWidth={2} w="full">
+                      <Tr key={q.id} borderBottomColor="gray.400" borderBottomWidth={2} w="full">
                         <Td px={["4", "4", "8"]}>
                           <Checkbox
                             colorScheme="blue"
@@ -256,21 +265,21 @@ export default function QuestionList() {
                                 {isWideVersion ? 'Visualizar Questões' : ''}
                               </Button>
                             </Box>
+                            <Box>
+                              <Button
+                                as="a"
+                                size="sm"
+                                fontSize="sm"
+                                colorScheme="orange"
+                                cursor="pointer"
+                                leftIcon={<Icon as={RiAddLine} fontSize="16" />}
+                                onClick={() => handleAdditionalQuestion(q.id)}
+                              >
+                                {isWideVersion ? 'Cadastrar Questões' : ''}
+                              </Button>
+                            </Box>
                             {q.checked ? (
                               <>
-                                <Box>
-                                  <Button
-                                    as="a"
-                                    size="sm"
-                                    fontSize="sm"
-                                    colorScheme="green"
-                                    cursor="pointer"
-                                    leftIcon={<Icon as={RiAddLine} fontSize="16" />}
-                                    onClick={() => handleAdditionalQuestion(q.id)}
-                                  >
-                                    {isWideVersion ? 'Cadastrar Questões' : ''}
-                                  </Button>
-                                </Box>
                                 <Box>
                                   <Button
                                     as="a"

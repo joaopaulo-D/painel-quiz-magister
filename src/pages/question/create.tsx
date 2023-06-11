@@ -16,6 +16,7 @@ import { firebase } from "../../firebase/firebase";
 
 import { Discipline } from "../../dtos/Discipline";
 import { Nature } from "../../dtos/Nature";
+import { TextArea } from "../../components/Form/TextArea";
 
 type CreateQuestionFormData = {
   questao: string;
@@ -23,6 +24,7 @@ type CreateQuestionFormData = {
   alternative2: string;
   alternative3: string;
   alternative4: string;
+  alternative5: string;
 }
 
 const createQuestionFormSchema = yup.object().shape({
@@ -31,6 +33,7 @@ const createQuestionFormSchema = yup.object().shape({
   alternative2: yup.string().required('Alternativa é obrigatória'),
   alternative3: yup.string().required('Alternativa é obrigatória'),
   alternative4: yup.string().required('Alternativa é obrigatória'),
+  alternative5: yup.string().required('Alternativa é obrigatória'),
 })
 
 export default function createQuestion() {
@@ -39,7 +42,7 @@ export default function createQuestion() {
   const [discipline, setDiscipline] = useState<Discipline[]>([]);
   const [nature, setNature] = useState<Nature[]>([]);
   const [selectNature, setSelectNature] = useState<string>("");
-  const [selectDiscipline, setSelectDiscipline] = useState<string>("");
+  const [selectDiscipline, setSelectDiscipline] = useState<{value: string, id: string}>({ value: "", id: "" });
 
   const router = useRouter();
 
@@ -52,18 +55,19 @@ export default function createQuestion() {
   const handleCreateQuestion: SubmitHandler<CreateQuestionFormData> = async (values) => {
     try {
       await firebase.firestore().collection("questions").doc().set({
-        title: selectDiscipline,
+        id_disciplina: selectDiscipline.id,
+        title: selectDiscipline.value,
         natureza: selectNature,
         questions: [
           {
             title: values.questao,
-            alternatives: [values.alternative1, values.alternative2, values.alternative3, values.alternative4],
+            alternatives: [values.alternative1, values.alternative2, values.alternative3, values.alternative4, values.alternative5],
             correct: alternativeCorrect
           }
         ],
         created_at: firebase.firestore.FieldValue.serverTimestamp()
       })
-      .finally(() => router.push("/question"))
+        .finally(() => router.push("/question"))
     } catch (error) {
       console.log(error.message)
     }
@@ -90,7 +94,7 @@ export default function createQuestion() {
   async function getAllDiscipline() {
     try {
       await firebase.firestore().collection("disciplines").where("natureza", "==", selectNature).onSnapshot((query) => {
-        const nat = query.docs.map((doc) => {
+        const disc = query.docs.map((doc) => {
           return {
             id: doc.id,
             ...doc.data(),
@@ -98,7 +102,7 @@ export default function createQuestion() {
           }
         }) as unknown as Discipline[]
 
-        setDiscipline(nat)
+        setDiscipline(disc)
       })
     } catch (error) {
       console.log(error.message)
@@ -133,7 +137,7 @@ export default function createQuestion() {
             <SimpleGrid minChildWidth="240px" spacing={["6", "8"]} w="100%">
               <Box>
                 <Text fontWeight="bold" mb={2} color="gray.500">Natureza</Text>
-                <Select bg="white" placeholder='Selecione uma natureza' color="gray.500" borderColor="blue.200" borderWidth={1} size={"lg"}  onChange={(values) => setSelectNature(values.target.value)}>
+                <Select bg="white" placeholder='Selecione uma natureza' color="gray.500" borderColor="blue.200" borderWidth={1} size={"lg"} onChange={(values) => setSelectNature(values.target.value)}>
                   {nature.map((nat, index) => (
                     <option key={nat.id} style={{ color: "gray" }} value={nat.natureza}>{`${nat.natureza}`}</option>
                   ))}
@@ -142,9 +146,21 @@ export default function createQuestion() {
               {selectNature ? (
                 <Box>
                   <Text fontWeight="bold" mb={2} color="gray.500">Disciplina</Text>
-                  <Select bg="white" placeholder='Selecione uma disciplina' size={"lg"} color="gray.500" borderColor="blue.200" borderWidth={1} onChange={(values) => setSelectDiscipline(values.target.value)}>
+                  <Select
+                    bg="white"
+                    placeholder='Selecione uma disciplina'
+                    size={"lg"}
+                    color="gray.500"
+                    borderColor="blue.200"
+                    borderWidth={1}
+                    onChange={(event) => {
+                      const selectedValue = event.target.value;
+                      const selectedId = event.target.options[event.target.selectedIndex].dataset.id;
+                      setSelectDiscipline({ value: selectedValue, id: selectedId });
+                    }}
+                  >
                     {discipline.map((disc, index) => (
-                      <option key={disc.id} style={{ color: "gray" }} value={disc.title}>{`${disc.title}`}</option>
+                      <option key={disc.id} style={{ color: "gray" }} value={disc.title} data-id={disc.id}>{`${disc.title}`}</option>
                     ))}
                   </Select>
                 </Box>
@@ -154,7 +170,7 @@ export default function createQuestion() {
             <Divider my="2" borderColor="gray.700" />
 
             <SimpleGrid minChildWidth="240px" spacing={["6", "8"]} w="100%">
-              <Input
+              <TextArea
                 name="questao"
                 label="Questão"
                 error={errors.questao}
@@ -190,6 +206,14 @@ export default function createQuestion() {
                 {...register('alternative4')}
               />
             </SimpleGrid>
+            <SimpleGrid minChildWidth="240px" spacing={["6", "8"]} w="100%">
+              <Input
+                name="alternative5"
+                label="Alternativa 5"
+                error={errors.alternative5}
+                {...register('alternative5')}
+              />
+            </SimpleGrid>
 
             <SimpleGrid minChildWidth="240px" spacing={["6", "8"]} w="100%">
               <Box>
@@ -199,16 +223,14 @@ export default function createQuestion() {
                   <option style={{ color: "gray" }} value='2'>Alternativa 2</option>
                   <option style={{ color: "gray" }} value='3'>Alternativa 3</option>
                   <option style={{ color: "gray" }} value='4'>Alternativa 4</option>
+                  <option style={{ color: "gray" }} value='5'>Alternativa 5</option>
                 </Select>
               </Box>
             </SimpleGrid>
           </VStack>
 
-          <Flex mt="8" justify="flex-end">
+          <Flex mt="8" justify="flex-start">
             <HStack spacing="4">
-              <Link href="/question" passHref>
-                <Button as="a" colorScheme="red">Cancelar</Button>
-              </Link>
               <Button
                 type="submit"
                 colorScheme="green"
@@ -216,6 +238,9 @@ export default function createQuestion() {
               >
                 Salvar
               </Button>
+              <Link href="/question" passHref>
+                <Button as="a" colorScheme="red">Cancelar</Button>
+              </Link>
             </HStack>
           </Flex>
         </Box>

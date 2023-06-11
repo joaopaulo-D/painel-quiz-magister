@@ -12,6 +12,7 @@ import { Sidebar } from "../../../components/Sidebar";
 import { useRouter } from "next/router";
 
 import { firebase } from "../../../firebase/firebase";
+import { TextArea } from "../../../components/Form/TextArea";
 
 type CreateAdditionalQuestionFormData = {
   questao: string;
@@ -77,7 +78,7 @@ export default function createAdditionalQuestion() {
 
           <VStack spacing="8">
             <SimpleGrid minChildWidth="240px" spacing={["6", "8"]} w="100%">
-              <Input
+              <TextArea
                 name="questao"
                 label="Questão"
                 error={errors.questao}

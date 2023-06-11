@@ -1,16 +1,19 @@
-import { Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
+
+import Image from "next/image";
+import logo from "../../../public/assets/logo.png"
 
 export function Logo() {
   return (
-    <Text
-      fontSize={["2xl", "3xl"]}
-      fontWeight="bold"
-      letterSpacing="tight"
+    <Box
       w="64"
-      color="blue.200"
     >
-      QUIZ
-      <Text as="span" ml="1" color="blue.200">.</Text>
-    </Text>
+      <Image
+        src={logo}
+        width={80}
+        height={80}
+        alt="logo"
+      />
+    </Box>
   )
 }

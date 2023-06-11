@@ -2,7 +2,7 @@ import { Box, Flex, SimpleGrid, Text, theme } from '@chakra-ui/react'
 
 import { BsPerson } from 'react-icons/bs'
 import { MdQuiz } from "react-icons/md"
-import { FaUsers } from "react-icons/fa"
+import { FaUsers, FaUser } from "react-icons/fa"
 
 import { Header } from "../components/Header"
 import { Sidebar } from '../components/Sidebar'

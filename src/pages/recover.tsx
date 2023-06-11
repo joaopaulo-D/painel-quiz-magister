@@ -10,38 +10,34 @@ import logo from "../../public/assets/logo.png";
 import logoSap from "../../public/assets/logoSap.jpg";
 
 import { MdOutlineEmail } from "react-icons/md";
-import { BiLockAlt } from "react-icons/bi";
+import { BiLockAlt, BiUser } from "react-icons/bi";
 import Link from 'next/link'
 
 import { AuthContext } from '../contexts/FirebaseAuthenticationContext'
 import { useContext } from 'react'
 
-type SignInFormData = {
+type RecoverFormData = {
   email: string;
-  password: string;
 }
 
-const signInFormSchema = yup.object().shape({
+const RecoverFormSchema = yup.object().shape({
   email: yup.string().required('E-mail obrigatório').email('E-mail inválido'),
-  password: yup.string().required('Senha obrigatória'),
 })
 
-export default function SignIn() {
-  const { loginWithEmailPassword } = useContext(AuthContext);
-  const toast = useToast();
-  const router = useRouter()
+export default function Recover() {
+  const { sendPasswordResetEmail } = useContext(AuthContext);
 
   const { register, handleSubmit, formState } = useForm({
-    resolver: yupResolver(signInFormSchema)
+    resolver: yupResolver(RecoverFormSchema)
   })
 
   const { errors } = formState;
 
 
-  const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
+  const handleSignIn: SubmitHandler<RecoverFormData> = async (values) => {
     await new Promise(resolve => setTimeout(resolve, 2000))
 
-    loginWithEmailPassword(values.email, values.password);
+    sendPasswordResetEmail(values.email)
   }
 
   return (
@@ -81,7 +77,18 @@ export default function SignIn() {
           </Box>
         </Center>
 
+        <Divider w="full" mb={5}/>
+
+        <Center mb={5}>
+          <Text fontSize={18} color="gray.400">Esqueceu sua senha?</Text>
+        </Center>
+
+        <Divider w="full" mb={5}/>
+
         <Stack spacing={4}>
+          <Text fontSize={15} color="gray.200" textAlign="justify">
+            Digite seu email, em seguida clique no botão enviar. Uma link de redefinição da sua senha será enviado para o email cadastrado.
+          </Text>
           <InputGroup size="lg">
             <InputLeftElement children={<Icon as={MdOutlineEmail} color="gray.300" fontSize={20} />} />
             <Input
@@ -96,21 +103,6 @@ export default function SignIn() {
               {...register("email")}
             />
           </InputGroup>
-
-          <InputGroup size="lg">
-            <InputLeftElement children={<Icon as={BiLockAlt} color="gray.300" fontSize={20} />} />
-            <Input
-              name="password"
-              type="password"
-              color="gray.300"
-              _placeholder={{
-                fontSize: 15,
-                color: "gray.300"
-              }}
-              placeholder='Senha'
-              {...register("password")}
-            />
-          </InputGroup>
         </Stack>
 
         <Button
@@ -120,15 +112,12 @@ export default function SignIn() {
           size="lg"
           isLoading={formState.isSubmitting}
         >
-          Entrar
+          Enviar
         </Button>
 
-        <Center justifyContent="space-between" flexDir="row" mt={10}>
-          <Link href="/register">
-            <Text color="blue.200">Cadastrar</Text>
-          </Link>
-          <Link href="/recover">
-            <Text color="blue.200">Esqueceu a senha?</Text>
+        <Center flexDir="row" mt={10}>
+          <Link href="/">
+            <Text color="blue.200">Voltar</Text>
           </Link>
         </Center>
       </Flex>
