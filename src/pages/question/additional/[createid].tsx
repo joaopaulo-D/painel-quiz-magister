@@ -141,9 +141,6 @@ export default function createAdditionalQuestion() {
 
           <Flex mt="8" justify="flex-start">
             <HStack spacing="4">
-              <Link href="/question" passHref>
-                <Button as="a" colorScheme="red">Cancelar</Button>
-              </Link>
               <Button
                 type="submit"
                 colorScheme="green"
@@ -151,6 +148,9 @@ export default function createAdditionalQuestion() {
               >
                 Salvar
               </Button>
+              <Link href="/question" passHref>
+                <Button as="a" colorScheme="red">Cancelar</Button>
+              </Link>
             </HStack>
           </Flex>
         </Box>
