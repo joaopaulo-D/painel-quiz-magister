@@ -36,8 +36,6 @@ export default function createDiscipline() {
 
   const handleCreateDiscipline: SubmitHandler<CreateDisciplineFormData> = async (values) => {
     try {
-      const id_discipline = handleIdSequential();
-
       await firebase.firestore().collection("disciplines").add({
         title: values.disciplina,
         natureza: natureza,
