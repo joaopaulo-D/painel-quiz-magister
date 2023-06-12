@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
 
-import { Box, Button, Checkbox, Flex, Heading, Icon, Spinner, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue, Link, Badge, HStack, VStack } from "@chakra-ui/react";
-import { RiAddLine, RiPencilLine, RiDeleteBinLine } from "react-icons/ri";
+import { Box, Button, Flex, Heading, Icon, Spinner, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue, Link, Badge, HStack, VStack, Stack, useDisclosure } from "@chakra-ui/react";
+import { RiPencilLine, RiDeleteBinLine } from "react-icons/ri";
+import { TbListDetails } from "react-icons/tb";
 
 import { Header } from "../../components/Header";
-import { Pagination } from "../../components/Pagination";
 import { Sidebar } from "../../components/Sidebar";
 
 import { firebase } from "../../firebase/firebase";
-import { convertTimeStampToString } from "../../utils/date";
 
-import { Question } from "../../dtos/Question";
+import { Alternative, Question } from "../../dtos/Question";
+import { ModalViewQuestion } from "../../components/ModalViewQuestion";
 
 export default function ViewQuestions() {
-  const [page, setPage] = useState(1);
   const router = useRouter();
 
   const isWideVersion = useBreakpointValue({
@@ -23,10 +21,21 @@ export default function ViewQuestions() {
     lg: true,
   })
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, serError] = useState("")
 
-  const [questions, setQuestions] = useState<Question[]>([])
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [modalViewQuestion, setModalViewQuestion] = useState<Alternative>();
+
+  const [itemPages, setItemPages] = useState(2)
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const pages = Math.ceil(questions.length / itemPages);
+  const startIdex = currentPage * itemPages;
+  const endIdex = startIdex + itemPages;
+  const currentItens = questions.slice(startIdex, endIdex);
 
   function getAllQuestions() {
     try {
@@ -63,6 +72,11 @@ export default function ViewQuestions() {
     setQuestions(questions.map((q, currentIndex) => currentIndex === index ? { ...q, checked: !q.checked } : q))
   }
 
+  function handleModalViewQuestion(question: Alternative){
+    console.log(isOpen)
+    setModalViewQuestion(question)
+  }
+
   useEffect(() => {
     getAllQuestions()
   }, [])
@@ -87,7 +101,7 @@ export default function ViewQuestions() {
 
           {isLoading ? (
             <Flex justify="center">
-              <Spinner color="blue.200"/>
+              <Spinner color="blue.200" />
             </Flex>
           ) : error ? (
             <Flex justify="center">
@@ -107,12 +121,12 @@ export default function ViewQuestions() {
                 </Thead>
                 <Tbody bg="white.300">
 
-                  {questions.map((q, index) => {
+                  {currentItens.map((q, index) => {
                     return (
-                      <React.Fragment key={q.id}>
+                      <>
                         {q.questions.map((question, index_question) => (
-                          <Tr>
-                            <Td color="gray.500">{index_question+1}</Td>
+                          <Tr borderBottomColor="gray.400" borderBottomWidth={2} w="full">
+                            <Td color="gray.500">{index_question + 1}</Td>
                             <Td color="gray.500">{question.title}</Td>
                             <Td>
                               {/* {question.alternatives.map((alternative, index) => (
@@ -123,6 +137,21 @@ export default function ViewQuestions() {
                             <Td color="gray.500">{question.correct}</Td>
                             <Td>
                               <HStack>
+                                <Box>
+                                  <Button
+                                    as="a"
+                                    size="sm"
+                                    fontSize="sm"
+                                    colorScheme="blue"
+                                    cursor="pointer"
+                                    onClick={() => {
+                                      handleModalViewQuestion(question) 
+                                      onOpen()
+                                    }}
+                                  >
+                                    <Icon as={TbListDetails} fontSize="16" />
+                                  </Button>
+                                </Box>
                                 <Box>
                                   <Button
                                     as="a"
@@ -150,20 +179,46 @@ export default function ViewQuestions() {
                             </Td>
                           </Tr>
                         ))}
-                      </React.Fragment>
+                      </>
                     )
                   })}
 
                 </Tbody>
               </Table>
 
-              <Pagination
-                totalCountOfRegisters={questions.length}
-                currentPage={page}
-                onPageChange={setPage}
-              />
+              <Stack
+                spacing="6"
+                direction={["column", "row"]}
+                mt="8"
+                justify="space-between"
+                align="center"
+              >
+                <HStack>
+                  <Text color="gray.500">0 - </Text><Text color="gray.500">10 de</Text><Text color="gray.500">100</Text>
+                </HStack>
+
+                <Stack direction="row" spacing="2">
+
+                  {Array.from(Array(pages), (item, index) => {
+                    return (
+                      <Button
+                        size="sm"
+                        value={index}
+                        fontSize="xs"
+                        width="4"
+                        bgColor="blue.200"
+                        onClick={(e) => setCurrentPage(Number(e.currentTarget.value))}
+                      >
+                        <Text color="white">{index + 1}</Text>
+                      </Button>
+                    )
+                  })}
+
+                </Stack>
+              </Stack>
             </>
           )}
+          {isOpen ? <ModalViewQuestion question={modalViewQuestion} isOpen={isOpen} onClose={onClose}/> : null}
           <Flex mt="10" justify="flex-end">
             <HStack spacing="4">
               <Button as="a" cursor="pointer" onClick={() => router.back()} colorScheme="red">Voltar</Button>
