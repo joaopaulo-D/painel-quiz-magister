@@ -219,11 +219,11 @@ export default function createQuestion() {
               <Box>
                 <Text fontWeight="bold" mb={2} color="gray.500">Alternativa Correta</Text>
                 <Select bg="white" placeholder='Selecione a alternativa correta' color="gray.500" borderColor="blue.200" borderWidth={1} size={"lg"} onChange={(values) => setAlternativeCorrect(values.target.value)}>
-                  <option style={{ color: "gray" }} value='1'>Alternativa 1</option>
-                  <option style={{ color: "gray" }} value='2'>Alternativa 2</option>
-                  <option style={{ color: "gray" }} value='3'>Alternativa 3</option>
-                  <option style={{ color: "gray" }} value='4'>Alternativa 4</option>
-                  <option style={{ color: "gray" }} value='5'>Alternativa 5</option>
+                  <option style={{ color: "gray" }} value='0'>Alternativa 1</option>
+                  <option style={{ color: "gray" }} value='1'>Alternativa 2</option>
+                  <option style={{ color: "gray" }} value='2'>Alternativa 3</option>
+                  <option style={{ color: "gray" }} value='3'>Alternativa 4</option>
+                  <option style={{ color: "gray" }} value='4'>Alternativa 5</option>
                 </Select>
               </Box>
             </SimpleGrid>
