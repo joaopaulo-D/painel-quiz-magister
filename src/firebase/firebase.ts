@@ -3,13 +3,13 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBRJ_2v3mjn7wEuIZWe4Qf1ANC_2kOVqHg",
-  authDomain: "quizem-5d2d8.firebaseapp.com",
-  projectId: "quizem-5d2d8",
-  storageBucket: "quizem-5d2d8.appspot.com",
-  messagingSenderId: "151750302624",
-  appId: "1:151750302624:web:12bc2bbe13780f2906e2c5",
-  measurementId: "G-B5076ZYPZ9"
+  apiKey: "AIzaSyDs2z0HIOOrPDHTWLkKWIargmrhub1ObIA",
+  authDomain: "quizmagister.firebaseapp.com",
+  projectId: "quizmagister",
+  storageBucket: "quizmagister.appspot.com",
+  messagingSenderId: "793936707427",
+  appId: "1:793936707427:web:bd86e58659f89d31951d56",
+  measurementId: "G-T6PVR8FVEZ"
 }
 
 if (!firebase.apps.length) {
