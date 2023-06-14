@@ -7,11 +7,12 @@ import { TbListDetails } from "react-icons/tb";
 
 import { Header } from "../../components/Header";
 import { Sidebar } from "../../components/Sidebar";
+import { ModalViewQuestion } from "../../components/ModalViewQuestion";
+import { ModalEditQuestion } from "../../components/ModalEditQuestion";
 
 import { firebase } from "../../firebase/firebase";
 
 import { Alternative, Question } from "../../dtos/Question";
-import { ModalViewQuestion } from "../../components/ModalViewQuestion";
 
 export default function ViewQuestions() {
   const router = useRouter();
@@ -21,13 +22,15 @@ export default function ViewQuestions() {
     lg: true,
   })
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen: isOpenModalViewQuestion, onOpen: onOpenModalViewQuestion, onClose: onCloseModalViewQuestion } = useDisclosure();
+  const { isOpen: isOpenModalEditQuestion, onOpen: onOpenModalEditQuestion, onClose: onCloseModalEditQuestion } = useDisclosure();
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, serError] = useState("")
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [modalViewQuestion, setModalViewQuestion] = useState<Alternative>();
+  const [modalEditQuestion, setModalEditQuestion] = useState<any>(null);
 
   const [itemPages, setItemPages] = useState(2)
   const [currentPage, setCurrentPage] = useState(0);
@@ -42,7 +45,10 @@ export default function ViewQuestions() {
       setIsLoading(true)
       firebase.firestore().collection("questions").doc(router.query.id as string).onSnapshot((query) => {
         if (query.exists) {
-          const data = query.data() as Question[]
+          const data = {
+            id: query.id,
+            ...query.data()
+          } as unknown as Question[]
           // console.log(data)
           setQuestions([data] as any)
         }
@@ -73,8 +79,16 @@ export default function ViewQuestions() {
   }
 
   function handleModalViewQuestion(question: Alternative){
-    console.log(isOpen)
     setModalViewQuestion(question)
+  }
+
+  function handleModalEditQuestion(question: any, id: string, index_question: number, discipline: string){
+    setModalEditQuestion({
+      id: id,
+      data_question: question,
+      index: index_question,
+      discipline: discipline
+    })
   }
 
   useEffect(() => {
@@ -146,7 +160,7 @@ export default function ViewQuestions() {
                                     cursor="pointer"
                                     onClick={() => {
                                       handleModalViewQuestion(question) 
-                                      onOpen()
+                                      onOpenModalViewQuestion()
                                     }}
                                   >
                                     <Icon as={TbListDetails} fontSize="16" />
@@ -159,6 +173,10 @@ export default function ViewQuestions() {
                                     fontSize="sm"
                                     colorScheme="green"
                                     cursor="pointer"
+                                    onClick={() => {
+                                      handleModalEditQuestion(question, q.id, index_question, q.title) 
+                                      onOpenModalEditQuestion()
+                                    }}
                                   >
                                     <Icon as={RiPencilLine} fontSize="16" />
                                   </Button>
@@ -218,7 +236,8 @@ export default function ViewQuestions() {
               </Stack>
             </>
           )}
-          {isOpen ? <ModalViewQuestion question={modalViewQuestion} isOpen={isOpen} onClose={onClose}/> : null}
+          {isOpenModalViewQuestion ? <ModalViewQuestion question={modalViewQuestion} isOpen={isOpenModalViewQuestion} onClose={onCloseModalViewQuestion}/> : null}
+          {isOpenModalEditQuestion ? <ModalEditQuestion data={modalEditQuestion} isOpen={isOpenModalEditQuestion} onClose={onCloseModalEditQuestion}/> : null}
           <Flex mt="10" justify="flex-end">
             <HStack spacing="4">
               <Button as="a" cursor="pointer" onClick={() => router.back()} colorScheme="red">Voltar</Button>
