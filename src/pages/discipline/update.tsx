@@ -86,7 +86,7 @@ export default function updateDiscipline() {
           p={["6", "8"]}
           onSubmit={handleSubmit(handleUpdateDiscipline)}
         >
-          <Heading size="lg" fontWeight="normal" color="gray.500">Editar disciplina</Heading>
+          <Heading size="lg" fontWeight="normal" color="gray.500">Editar Disciplina</Heading>
 
           <Divider my="6" borderColor="gray.700" />
 
@@ -113,11 +113,8 @@ export default function updateDiscipline() {
             </VStack>
           )}
 
-          <Flex mt="8" justify="flex-end">
+          <Flex mt="8" justify="flex-start">
             <HStack spacing="4">
-              <Link href="/discipline" passHref>
-                <Button as="a" colorScheme="red">Cancelar</Button>
-              </Link>
               <Button
                 type="submit"
                 colorScheme="green"
@@ -125,6 +122,9 @@ export default function updateDiscipline() {
               >
                 Atualizar
               </Button>
+              <Link href="/discipline" passHref>
+                <Button as="a" colorScheme="red">Cancelar</Button>
+              </Link>
             </HStack>
           </Flex>
         </Box>

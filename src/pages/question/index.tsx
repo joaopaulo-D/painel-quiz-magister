@@ -146,7 +146,16 @@ export default function QuestionList() {
   }
 
   function updateCheckStatus(index: number) {
-    setQuestions(questions.map((question, currentIndex) => currentIndex === index ? { ...question, checked: !question.checked } : question))
+    const allChecked = questions.every(question => question.checked);
+    
+    setQuestions(questions.map((question, currentIndex) => {
+      if (allChecked) {
+        return { ...question, checked: false };
+      } else if (currentIndex === index) {
+        return { ...question, checked: !question.checked };
+      }
+      return question;
+    }));
   }
 
   useEffect(() => {
@@ -178,7 +187,7 @@ export default function QuestionList() {
                   colorScheme="green"
                   leftIcon={<Icon as={RiAddLine} fontSize="20" />}
                 >
-                  Criar Questão inicial
+                  Criar Questão Inicial
                 </Button>
               </NextLink>
               <Box bg="white" >

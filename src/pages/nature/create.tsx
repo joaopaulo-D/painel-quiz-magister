@@ -68,11 +68,8 @@ export default function createNature() {
             </SimpleGrid>
           </VStack>
 
-          <Flex mt="8" justify="flex-end">
+          <Flex mt="8" justify="flex-start">
             <HStack spacing="4">
-              <Link href="/nature" passHref>
-                <Button as="a" colorScheme="red">Cancelar</Button>
-              </Link>
               <Button
                 type="submit"
                 colorScheme="green"
@@ -80,6 +77,9 @@ export default function createNature() {
               >
                 Salvar
               </Button>
+              <Link href="/nature" passHref>
+                <Button as="a" colorScheme="red">Cancelar</Button>
+              </Link>
             </HStack>
           </Flex>
         </Box>

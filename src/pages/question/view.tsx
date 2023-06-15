@@ -141,7 +141,7 @@ export default function ViewQuestions() {
                         {q.questions.map((question, index_question) => (
                           <Tr borderBottomColor="gray.400" borderBottomWidth={2} w="full">
                             <Td color="gray.500">{index_question + 1}</Td>
-                            <Td color="gray.500">{question.title}</Td>
+                            <Td color="gray.500" noOfLines={4}>{question.title}</Td>
                             <Td>
                               {/* {question.alternatives.map((alternative, index) => (
                                 <Text key={index}>{alternative}</Text>

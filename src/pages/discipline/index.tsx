@@ -78,7 +78,16 @@ export default function DisciplineList() {
   }
 
   function updateCheckStatus(index: number) {
-    setDiscipline(discipline.map((dis, currentIndex) => currentIndex === index ? { ...dis, checked: !dis.checked } : dis))
+    const allChecked = discipline.every(discipline => discipline.checked);
+    
+    setDiscipline(discipline.map((discipline, currentIndex) => {
+      if (allChecked) {
+        return { ...discipline, checked: false };
+      } else if (currentIndex === index) {
+        return { ...discipline, checked: !discipline.checked };
+      }
+      return discipline;
+    }));
   }
 
   useEffect(() => {
@@ -172,7 +181,7 @@ export default function DisciplineList() {
                                 leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
                                 onClick={() => handleUpdatePageDiscipline(disc.id, disc.natureza, disc.title)}
                               >
-                                {isWideVersion ? 'Editar disciplina' : ''}
+                                {isWideVersion ? 'Editar Disciplina' : ''}
                               </Button>
                             </Box>
                             {disc.checked ? (
@@ -186,7 +195,7 @@ export default function DisciplineList() {
                                   leftIcon={<Icon as={RiDeleteBinLine} fontSize="16" />}
                                   onClick={() => deleteDiscipline(disc.id)}
                                 >
-                                  {isWideVersion ? 'Excluir disciplina' : ''}
+                                  {isWideVersion ? 'Excluir Disciplina' : ''}
                                 </Button>
                               </Box>
                             ) : null}

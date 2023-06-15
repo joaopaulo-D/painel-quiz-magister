@@ -15,7 +15,7 @@ export function Profile({ showProfileData }: ProfileProps) {
   const [user, setUser] = useState<User[]>([]);
 
   const getDataUserAuthenticated = async () => {
-    try {  
+    try {
       const response = await firebase.firestore().collection("users").doc(firebase.auth().currentUser?.uid).get()
       const data = response.data()
 
@@ -38,21 +38,22 @@ export function Profile({ showProfileData }: ProfileProps) {
 
   return (
     <Flex align="center">
-      { showProfileData && (
+      {showProfileData && (
         <>
           {user.map((u, index) => (
-            <Box mr="4" textAlign="right">
-              <Text color="gray.400">{u.name}</Text>
-              <Text color="gray.300" fontSize="small">
-                {u.email}
-              </Text>
-            </Box>
+            <>
+              <Box mr="4" textAlign="right">
+                <Text color="gray.400">{u.name}</Text>
+                <Text color="gray.300" fontSize="small">
+                  {u.email}
+                </Text>
+              </Box>
+              <Avatar size="md" name={u.name} src="" borderColor="blue.200" borderWidth={2} />
+            </>
           ))}
         </>
-        
-      )}
 
-      <Avatar size="md" name="joao" src="" borderColor="blue.200" borderWidth={2}/>
+      )}
     </Flex>
   )
 }

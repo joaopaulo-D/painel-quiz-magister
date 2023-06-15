@@ -74,7 +74,7 @@ export default function createAdditionalQuestion() {
           p={["6", "8"]}
           onSubmit={handleSubmit(handleCreateAdditionalQuestion)}
         >
-          <Heading size="lg" fontWeight="normal" color="gray.500">Criar questão</Heading>
+          <Heading size="lg" fontWeight="normal" color="gray.500">Criar Questão</Heading>
 
           <Divider my="6" borderColor="gray.700" />
 

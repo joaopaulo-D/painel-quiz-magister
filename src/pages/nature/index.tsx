@@ -98,7 +98,7 @@ export default function NatureList() {
                 colorScheme="green"
                 leftIcon={<Icon as={RiAddLine} fontSize="20" />}
               >
-                Criar natureza
+                Criar Natureza
               </Button>
             </NextLink>
           </Flex>
@@ -158,7 +158,7 @@ export default function NatureList() {
                                 leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
                                 onClick={() => handleUpdatePageNature(n.id, n.natureza)}
                               >
-                                {isWideVersion ? 'Editar natureza' : ''}
+                                {isWideVersion ? 'Editar Natureza' : ''}
                               </Button>
                             </Box>
                             {n.checked ? (
@@ -172,7 +172,7 @@ export default function NatureList() {
                                   leftIcon={<Icon as={RiDeleteBinLine} fontSize="16" />}
                                   onClick={() => deleteNature(n.id)}
                                 >
-                                  {isWideVersion ? 'Excluir natureza' : ''}
+                                  {isWideVersion ? 'Excluir Natureza' : ''}
                                 </Button>
                               </Box>
                             ) : null}
